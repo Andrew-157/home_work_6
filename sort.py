@@ -7,45 +7,45 @@ from locale import normalize
 
 def sort_images(dir_address, name, splitted_name, new_name):
     # function for moving images to a directory "images"
-    original = f'{dir_address}\\{name}'
-    move_to = f'{dir_address}\\images'
+    original = os.path.join(dir_address, name)
+    move_to = os.path.join(dir_address, 'images')
     shutil.move(original, move_to)
-    os.rename(f'{dir_address}\\images\\{name}',
-              f'{dir_address}\\images\\{new_name}.{splitted_name[-1]}')
+    os.rename(os.path.join(f'{dir_address}\\images', name), os.path.join(
+        f'{dir_address}\\images', f'{new_name}.{splitted_name[-1]}'))
 
 
 def sort_video(dir_address, name, splitted_name, new_name):
     # function for moving video to a directory "video"
-    original = f'{dir_address}\\{name}'
-    move_to = f'{dir_address}\\video'
+    original = os.path.join(dir_address, name)
+    move_to = os.path.join(dir_address, 'video')
     shutil.move(original, move_to)
-    os.rename(f'{dir_address}\\video\\{name}',
-              f'{dir_address}\\video\\{new_name}.{splitted_name[-1]}')
+    os.rename(os.path.join(f'{dir_address}\\video', name), os.path.join(
+        f'{dir_address}\\video', f'{new_name}.{splitted_name[-1]}'))
 
 
 def sort_documents(dir_address, name, splitted_name, new_name):
     # function for moving documents to a directory "documents"
-    original = f'{dir_address}\\{name}'
-    move_to = f'{dir_address}\\documents'
+    original = os.path.join(dir_address, name)
+    move_to = os.path.join(dir_address, 'documents')
     shutil.move(original, move_to)
-    os.rename(f'{dir_address}\\documents\\{name}',
-              f'{dir_address}\\documents\\{new_name}.{splitted_name[-1]}')
+    os.rename(os.path.join(f'{dir_address}\\documents', name), os.path.join(
+        f'{dir_address}\\documents', f'{new_name}.{splitted_name[-1]}'))
 
 
 def sort_audio(dir_address, name, splitted_name, new_name):
     # function for moving audio to a directory "audio"
-    original = f'{dir_address}\\{name}'
-    move_to = f'{dir_address}\\audio'
+    original = os.path.join(dir_address, name)
+    move_to = os.path.join(dir_address, 'audio')
     shutil.move(original, move_to)
-    os.rename(f'{dir_address}\\audio\\{name}',
-              f'{dir_address}\\audio\\{new_name}.{splitted_name[-1]}')
+    os.rename(os.path.join(f'{dir_address}\\audio', name), os.path.join(
+        f'{dir_address}\\audio', f'{new_name}.{splitted_name[-1]}'))
 
 
 def sort_archive(dir_address, name, new_name):
     # function for unpacking an archive in a subfolder
-    shutil.unpack_archive(
-        f'{dir_address}\\{name}', f'{dir_address}\\archive\\{new_name}')
-    os.remove(f'{dir_address}\\{name}')
+    shutil.unpack_archive(os.path.join(dir_address, name),
+                          os.path.join(f'{dir_address}\\archive', new_name))
+    os.remove(os.path.join(dir_address, name))
 
 
 def sort_files(name):
@@ -75,10 +75,10 @@ def sort_files(name):
 
                 dir = os.listdir(file)
                 if len(dir) == 0:
-                    os.rmdir(f'{dir_address}\\{file.name}')
+                    os.rmdir(os.path.join(dir_address, file.name))
 
                 else:
-                    sort_files(f'{dir_address}\\{file.name}')
+                    sort_files(os.path.join(dir_address, file.name))
 
             elif file.name.endswith(('.jpeg', '.png', '.jpg', '.svg')):
 
@@ -126,7 +126,8 @@ def sort_files(name):
                 new_name = normalize(
                     file.name.replace(f'.{splitted_name[-1]}', ""))
                 sort_archive(dir_address, file.name, new_name)
-                sort_files(f'{dir_address}\\archive\\{new_name}\\archive')
+                sort_files(os.path.join(
+                    f'{dir_address}\\archive', f'{new_name}\\archive'))
 
                 names_of_archives.append(new_name)
                 extensions.append(splitted_name[-1])
@@ -142,4 +143,4 @@ def sort_files(name):
         \nArchive: {names_of_archives}\nUnknown files: {names_of_files_unknown}\nExtensions: {extensions}\nUnknown extensions: {unknown_extensions}"
 
 
-print(sort_files(argv[0]))
+print(sort_files(argv[1]))
